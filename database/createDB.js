@@ -12,8 +12,7 @@ const SneaksAPI = require("sneaks-api");
 const sneaks = new SneaksAPI();
 
 //gets 40 jordan 1s and 40 yeezy 350s
-function getShoeAttributes() {
-  let attributes = [];
+function getShoeAttributes(shoeNames) {
   const jsonGen = (product) => {
     return {
       name: product.shoeName,
@@ -26,24 +25,26 @@ function getShoeAttributes() {
       thumbnailImgage: product.thumbnail,
     };
   };
-  sneaks.getProducts("Jordan 1", function (err, products) {
-    for (product of products) {
-      db.insert(jsonGen(product));
-      //attributes.push(jsonGen(product));
-    }
-    sneaks.getProducts("Yeezy 350", (err, products) => {
-      for (product of products) {
-        //attributes.push(jsonGen(product));
+  for (shoe of shoeNames) {
+    sneaks.getProducts(shoe, function (err, products) {
+      if (err) {
+        return console.error(err);
       }
-      db.insert(jsonGen(product));
-      //fs.writeFileSync("shoeNames.json", "");
-      //let data = JSON.stringify(attributes);
-      //fs.writeFileSync("shoeNames.json", data);
+      console.log(products.length);
+      for (product of products) {
+        db.insert(jsonGen(product));
+      }
     });
-  });
+  }
 }
 
-getShoeAttributes();
+getShoeAttributes([
+  "Jordan 1",
+  "Nike Air Force One",
+  "Off-White",
+  "Yeezy 350 Boost",
+  "Reebok",
+]);
 
 // function getDesiredInfo(searchQuery) {
 //   sneaks.getProducts(searchQuery, async (err, products) => {
