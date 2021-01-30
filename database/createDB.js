@@ -11,7 +11,6 @@ db.loadDatabase();
 const SneaksAPI = require("sneaks-api");
 const sneaks = new SneaksAPI();
 
-//gets 40 jordan 1s and 40 yeezy 350s
 function getShoeAttributes(shoeNames) {
   const jsonGen = (product) => {
     return {
@@ -45,22 +44,3 @@ getShoeAttributes([
   "Yeezy 350 Boost",
   "Reebok",
 ]);
-
-// function getDesiredInfo(searchQuery) {
-//   sneaks.getProducts(searchQuery, async (err, products) => {
-//     let names = await function () {
-//     for (product of products) {
-//       names.push({
-//         name: product.shoeName,
-//         brand: product.brand,
-//         color: product.colorway,
-//         styleID: product.styleID,
-//         resellPrice: product.lowestResellPrice,
-//         retailPrice: products.retailPrice,
-//         releaseDate: product.releaseDate,
-//       });
-//     }
-//   }();
-//   return names;
-// }
-// }
