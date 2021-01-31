@@ -9,6 +9,7 @@ const ShoeSchema = new mongoose.Schema({
   resellPrice: Number,
   retailPrice: Number,
   sneakerValue: Number,
+  drip: Number,
   releaseDate: Date,
   thumbnailImgage: String,
 });
