@@ -1,6 +1,5 @@
 var express = require("express");
 var router = express.Router();
-var Datastore = require("nedb");
 const shoeModel = require("../models/shoe");
 const mongoose = require("mongoose");
 
