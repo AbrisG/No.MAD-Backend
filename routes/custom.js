@@ -13,9 +13,9 @@ const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", function () {
   router.get("/", function (req, res) {
-    shoeModel.find({}, function (err, shoes) {
+    shoeModel.findOne({ name: req.name }, function (err, shoe) {
       if (err) return console.error(err);
-      res.send(shoes);
+      res.send(shoe);
     });
   });
 });
