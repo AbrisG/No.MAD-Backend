@@ -46,9 +46,9 @@ db.once("open", function () {
         brand: product.brand,
         color: product.colorway,
         styleID: product.styleID,
-        resellPrice: getMin(product.lowestResellPrice),
+        resellPrice: product.lowestResellPrice.stockX,
         retailPrice: product.retailPrice,
-        sneakerValue: getSneakerValue(product),
+        sneakerValue: 200,
         releaseDate: product.releaseDate,
         thumbnailImgage: product.thumbnail,
       };
@@ -98,31 +98,26 @@ function parse(str) {
   } else return "offwhite";
 }
 
-function getMin(product) {
-  if (product === undefined) {
-    return 0;
-  }
-  var arr = Object.values(product);
-  var copy = [];
-  for (value of arr) {
-    if (value !== undefined) {
-      copy.push(value);
-    }
-  }
-  return Math.min(...copy);
-}
+//function getMin(product) {
+  //var arr = Object.values(product);
+  //var copy = [];
+  //for (value of arr) {
+    //if (value !== undefined) {
+      //copy.push(value);
+    //}
+  //}
+  //return Math.min(...copy);
+//}
 
-function getSneakerValue(product) {
+/*function getSneakerValue(product) {
   return (
-    ((getMin(product.resellPrice) - product.retailPrice) /
+    ((product.lowestResellPrice - product.retailPrice) /
       product.retailPrice) *
     100
   );
-}
+}*/
 
-console.log(
-  getMin({ stockX: 184, stadiumGoods: undefined, goat: 189, flightClub: 189 })
-);
+
 // db.find({}, (err, docs) => {
 //   if (err) {
 //     return console.error(err);
