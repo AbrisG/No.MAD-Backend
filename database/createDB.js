@@ -2,22 +2,6 @@ const { json } = require("express");
 var express = require("express");
 var router = express.Router();
 
-var Datastore = require("nedb");
-var dbOld = new Datastore({ filename: "database.db" });
-dbOld.loadDatabase();
-
-// dbOld.find({}, (err, docs) => {
-//   if (err) {
-//     return console.error(err);
-//   }
-//   for (shoe of docs) {
-//     shoeModel.findOne({ name: shoe.name }, function (err, doc) {
-//       if (err) return console.error(err);
-//       console.log(doc.hashtag);
-//     });
-//   }
-// });
-
 const mongoose = require("mongoose");
 const shoeModel = require("../models/shoe");
 const fs = require("fs");
@@ -46,9 +30,10 @@ db.once("open", function () {
         brand: product.brand,
         color: product.colorway,
         styleID: product.styleID,
-        resellPrice: getMin(product.lowestResellPrice),
+        resellPrice: 1,
         retailPrice: product.retailPrice,
-        sneakerValue: getSneakerValue(product),
+        sneakerValue: 1,
+        drip: getRandomInt(75, 99),
         releaseDate: product.releaseDate,
         thumbnailImgage: product.thumbnail,
       };
@@ -99,9 +84,6 @@ function parse(str) {
 }
 
 function getMin(product) {
-  if (product === undefined) {
-    return 0;
-  }
   var arr = Object.values(product);
   var copy = [];
   for (value of arr) {
@@ -120,22 +102,8 @@ function getSneakerValue(product) {
   );
 }
 
-console.log(
-  getMin({ stockX: 184, stadiumGoods: undefined, goat: 189, flightClub: 189 })
-);
-// db.find({}, (err, docs) => {
-//   if (err) {
-//     return console.error(err);
-//   }
-//   for (shoe of docs) {
-//     console.log(parse(shoe.name));
-//   }
-// });
-
-// getShoeAttributes([
-//   "Jordan 1",
-//   "Nike Air Force One",
-//   "Off-White",
-//   "Yeezy 350 Boost",
-//   "Reebok",
-// ]);
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+}
