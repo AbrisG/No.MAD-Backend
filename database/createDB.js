@@ -2,22 +2,6 @@ const { json } = require("express");
 var express = require("express");
 var router = express.Router();
 
-var Datastore = require("nedb");
-var dbOld = new Datastore({ filename: "database.db" });
-dbOld.loadDatabase();
-
-// dbOld.find({}, (err, docs) => {
-//   if (err) {
-//     return console.error(err);
-//   }
-//   for (shoe of docs) {
-//     shoeModel.findOne({ name: shoe.name }, function (err, doc) {
-//       if (err) return console.error(err);
-//       console.log(doc.hashtag);
-//     });
-//   }
-// });
-
 const mongoose = require("mongoose");
 const shoeModel = require("../models/shoe");
 const fs = require("fs");
@@ -46,9 +30,9 @@ db.once("open", function () {
         brand: product.brand,
         color: product.colorway,
         styleID: product.styleID,
-        resellPrice: product.lowestResellPrice.stockX,
+        resellPrice: 1,
         retailPrice: product.retailPrice,
-        sneakerValue: 200,
+        sneakerValue: 1,
         releaseDate: product.releaseDate,
         thumbnailImgage: product.thumbnail,
       };
@@ -98,16 +82,16 @@ function parse(str) {
   } else return "offwhite";
 }
 
-//function getMin(product) {
-  //var arr = Object.values(product);
-  //var copy = [];
-  //for (value of arr) {
-    //if (value !== undefined) {
-      //copy.push(value);
-    //}
-  //}
-  //return Math.min(...copy);
-//}
+function getMin(product) {
+  var arr = Object.values(product);
+  var copy = [];
+  for (value of arr) {
+    if (value !== undefined) {
+      copy.push(value);
+    }
+  }
+  return Math.min(...copy);
+}
 
 /*function getSneakerValue(product) {
   return (
@@ -118,19 +102,8 @@ function parse(str) {
 }*/
 
 
-// db.find({}, (err, docs) => {
-//   if (err) {
-//     return console.error(err);
-//   }
-//   for (shoe of docs) {
-//     console.log(parse(shoe.name));
-//   }
-// });
-
-// getShoeAttributes([
-//   "Jordan 1",
-//   "Nike Air Force One",
-//   "Off-White",
-//   "Yeezy 350 Boost",
-//   "Reebok",
-// ]);
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+}
