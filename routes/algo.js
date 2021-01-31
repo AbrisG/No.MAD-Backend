@@ -20,5 +20,4 @@ db.once("open", function () {
   });
 });
 
-
 module.exports = router;
