@@ -3,13 +3,13 @@
 /**
  * Module dependencies.
  */
-
+require("dotenv").config();
 var app = require("../app");
 var debug = require("debug")("api:server");
 var http = require("http");
 const mongoose = require("mongoose");
 mongoose.connect(
-  "mongodb+srv://AbrisG:Horse123@cluster0.0ds2t.mongodb.net/nomad?retryWrites=true&w=majority",
+  process.env.MONGO_DB_URI || "mongodb://localhost:27017/nomad",
   {
     useNewUrlParser: true,
   },
@@ -17,6 +17,7 @@ mongoose.connect(
     if (err) console.error(err);
   }
 );
+
 /**
  * Get port from environment and store in Express.
  */

@@ -2,9 +2,10 @@ const mongoose = require("mongoose");
 const shoeModel = require("../models/shoe");
 const SneaksAPI = require("sneaks-api");
 const sneaks = new SneaksAPI();
+require("dotenv").config({ path: "../.env" });
 
 mongoose.connect(
-  "mongodb+srv://AbrisG:Horse123@cluster0.0ds2t.mongodb.net/nomad?retryWrites=true&w=majority",
+  process.env.MONGO_DB_URI || "mongodb://localhost:27017/nomad",
   {
     useNewUrlParser: true,
   },
