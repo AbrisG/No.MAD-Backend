@@ -6,10 +6,10 @@ const ShoeSchema = new mongoose.Schema({
   brand: String,
   color: String,
   styleID: String,
-  resellPrice: Number,
+  resellPrice: Object,
   retailPrice: Number,
-  sneakerValue: Number,
-  drip: Number,
+  sneakerValue: Number, //currently not used in createDB
+  drip: Number, //currently not used in createDB
   releaseDate: Date,
   thumbnailImgage: String,
 });

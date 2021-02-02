@@ -1,71 +1,68 @@
-const { json } = require("express");
-var express = require("express");
-var router = express.Router();
-
 const mongoose = require("mongoose");
 const shoeModel = require("../models/shoe");
-const fs = require("fs");
+const SneaksAPI = require("sneaks-api");
+const sneaks = new SneaksAPI();
+
 mongoose.connect(
   "mongodb+srv://AbrisG:Horse123@cluster0.0ds2t.mongodb.net/nomad?retryWrites=true&w=majority",
   {
     useNewUrlParser: true,
+  },
+  function (err) {
+    if (err) console.error(err);
   }
 );
+mongoose.connection.once("open", () => createDB()); //checking to see if connection is open
 
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "connection error:"));
-db.once("open", function () {
-  shoeModel.remove({}, function (err) {
-    console.log("collection removed");
-  });
-
-  const SneaksAPI = require("sneaks-api");
-  const sneaks = new SneaksAPI();
-
-  function createShoeDatabase(shoeNames) {
-    const jsonGen = (product) => {
-      return {
-        name: product.shoeName,
-        hashtag: parse(product.shoeName),
-        brand: product.brand,
-        color: product.colorway,
-        styleID: product.styleID,
-        resellPrice: 1,
-        retailPrice: product.retailPrice,
-        sneakerValue: 1,
-        releaseDate: product.releaseDate,
-        thumbnailImgage: product.thumbnail,
-      };
-    };
-    for (shoe of shoeNames) {
-      sneaks.getProducts(shoe, function (err, products) {
-        if (err) {
-          return console.error(err);
-        }
-        console.log(products.length);
-        for (product of products) {
-          shoeModel(jsonGen(product)).save(function (err) {
-            if (err) return console.error(err);
-          });
-        }
-      });
-    }
-  }
-
-  createShoeDatabase([
+function createDB() {
+  shoesToAdd = [
     "Jordan 1",
     "Nike Air Force One",
     "Off-White",
     "Yeezy 350 Boost",
     "Reebok",
-  ]);
+  ];
+  createShoeDatabase(shoesToAdd);
+}
 
-  shoeModel.find(function (err, shoes) {
-    if (err) return console.error(err);
-    console.log(shoes.length);
+//database functions
+
+function createShoeDatabase(shoeNames) {
+  shoeModel.remove({}, function (err) {
+    console.log("remove succesfull");
+    if (err) console.error(err);
   });
-});
 
+  const jsonGen = (product) => {
+    return {
+      name: product.shoeName,
+      hashtag: parse(product.shoeName),
+      brand: product.brand,
+      color: product.colorway,
+      styleID: product.styleID,
+      resellPrice: product.lowestResellPrice,
+      retailPrice: product.retailPrice,
+      releaseDate: product.releaseDate,
+      thumbnailImgage: product.thumbnail,
+    };
+  };
+  for (shoe of shoeNames) {
+    sneaks.getProducts(shoe, function (err, products) {
+      if (err) {
+        return console.error(err);
+      }
+      for (product of products) {
+        shoeModel(jsonGen(product)).save(function (err) {
+          if (err) return console.error(err);
+        });
+      }
+    });
+  }
+}
+
+//helper functions
+
+//parses each shoe name to instagram hashtag root for instagram scraping
 function parse(str) {
   var wordList = str.split(" ");
   if (wordList[1].toLowerCase() === "yeezy") {
@@ -80,30 +77,4 @@ function parse(str) {
   } else if (wordList[0].toLowerCase() === "reebok") {
     return "reebok";
   } else return "offwhite";
-}
-
-function getMin(product) {
-  var arr = Object.values(product);
-  var copy = [];
-  for (value of arr) {
-    if (value !== undefined) {
-      copy.push(value);
-    }
-  }
-  return Math.min(...copy);
-}
-
-/*function getSneakerValue(product) {
-  return (
-    ((product.lowestResellPrice - product.retailPrice) /
-      product.retailPrice) *
-    100
-  );
-}*/
-
-
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
 }
