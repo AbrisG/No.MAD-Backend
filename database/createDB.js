@@ -8,6 +8,7 @@ mongoose.connect(
   process.env.MONGO_DB_URI || "mongodb://localhost:27017/nomad",
   {
     useNewUrlParser: true,
+    useUnifiedTopology: true,
   },
   function (err) {
     if (err) console.error(err);
@@ -29,7 +30,7 @@ function createDB() {
 //database functions
 
 function createShoeDatabase(shoeNames) {
-  shoeModel.remove({}, function (err) {
+  shoeModel.deleteMany({}, function (err) {
     console.log("remove succesfull");
     if (err) console.error(err);
   });
